@@ -20,7 +20,7 @@ const PRODUCT_FILES = {
 };
 
 // Required: disable Vercel's body parsing so Stripe signature verification works
-export const config = {
+module.exports.config = {
   api: { bodyParser: false },
 };
 
