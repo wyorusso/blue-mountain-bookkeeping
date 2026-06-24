@@ -26,7 +26,7 @@ if (navToggle && navLinks) {
 // --- Toast ---
 const toast = document.getElementById('toast');
 let toastTimer;
-function showToast(message, duration = 4000) {
+function showToast(message, duration = 4500) {
   if (!toast) return;
   toast.textContent = message;
   toast.classList.add('show');
@@ -36,26 +36,40 @@ function showToast(message, duration = 4000) {
 
 // ============================================
 //  STRIPE CHECKOUT
-//  Replace STRIPE_PUBLISHABLE_KEY with your
-//  actual key from stripe.com/dashboard
 //
-//  Each product also needs a Stripe Price ID.
-//  Create products in the Stripe dashboard,
-//  then paste the price_xxx IDs below.
+//  TEST mode:  use pk_test_xxx key + test card 4242 4242 4242 4242
+//  LIVE mode:  use pk_live_xxx key
+//
+//  The publishable key is safe to be in frontend code.
+//  The SECRET key lives only in Vercel environment variables.
+//
+//  After creating products in the Stripe dashboard, paste the
+//  price_xxx IDs below for BOTH test and live environments.
 // ============================================
 
-const STRIPE_PUBLISHABLE_KEY = 'pk_live_REPLACE_WITH_YOUR_KEY';
+// ---- PASTE YOUR PUBLISHABLE KEY HERE ----
+// Test:  pk_test_xxxxxxxxxxxxx
+// Live:  pk_live_xxxxxxxxxxxxx
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_REPLACE_WITH_YOUR_KEY';
 
-// Map product slugs to Stripe Price IDs
-// After creating products in Stripe dashboard, replace these:
+// ---- PASTE YOUR STRIPE PRICE IDs HERE ----
+// Get these from: Stripe Dashboard > Products > [product] > Pricing
 const STRIPE_PRICE_IDS = {
   'expense-tracker': 'price_REPLACE_EXPENSE_TRACKER',
   'cleanup-kit':     'price_REPLACE_CLEANUP_KIT',
   'tax-prep-kit':    'price_REPLACE_TAX_PREP_KIT',
+  'resource-bundle': 'price_REPLACE_RESOURCE_BUNDLE',
+};
+
+// Button labels for reset after error
+const BTN_LABELS = {
+  'expense-tracker': 'Buy Now — $9',
+  'cleanup-kit':     'Buy Now — $19',
+  'tax-prep-kit':    'Buy Now — $17',
+  'resource-bundle': 'Buy the Bundle — $37',
 };
 
 let stripeInstance = null;
-
 function getStripe() {
   if (!stripeInstance && typeof Stripe !== 'undefined') {
     stripeInstance = Stripe(STRIPE_PUBLISHABLE_KEY);
@@ -65,41 +79,46 @@ function getStripe() {
 
 document.querySelectorAll('.stripe-buy-btn').forEach(btn => {
   btn.addEventListener('click', async () => {
-    const product  = btn.dataset.product;
-    const priceId  = STRIPE_PRICE_IDS[product];
-    const name     = btn.dataset.name;
+    const product     = btn.dataset.product;
+    const priceId     = STRIPE_PRICE_IDS[product];
+    const productName = btn.dataset.name;
 
+    // Guard: price IDs not yet configured
     if (!priceId || priceId.startsWith('price_REPLACE')) {
       showToast('Checkout coming soon! Check back shortly.');
       return;
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Loading…';
+    btn.disabled    = true;
+    btn.textContent = 'Loading checkout…';
 
     try {
       const stripe = getStripe();
-      if (!stripe) throw new Error('Stripe not loaded');
+      if (!stripe) throw new Error('Stripe.js not loaded');
 
-      // Option A: Stripe Payment Links (simplest — no backend needed)
-      // Replace the URL below with your Payment Link from the Stripe dashboard:
-      // stripe.com/dashboard > Payment Links > Create
-      // window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
-
-      // Option B: Stripe Checkout (requires a backend /api/checkout endpoint)
       const res = await fetch('/api/checkout', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId, productName: name }),
+        body:    JSON.stringify({
+          priceId,
+          productName,
+          productSlug: product,   // passed to webhook so it knows which ZIP to send
+        }),
       });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Server error');
+      }
+
       const { sessionId } = await res.json();
       await stripe.redirectToCheckout({ sessionId });
 
     } catch (err) {
-      console.error('Stripe error:', err);
+      console.error('[Stripe]', err);
       showToast('Something went wrong. Please try again.');
-      btn.disabled = false;
-      btn.textContent = `Buy Now — ${btn.dataset.price === '900' ? '$9' : btn.dataset.price === '1700' ? '$17' : '$19'}`;
+      btn.disabled    = false;
+      btn.textContent = BTN_LABELS[product] || 'Buy Now';
     }
   });
 });

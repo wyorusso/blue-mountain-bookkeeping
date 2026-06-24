@@ -1,0 +1,13 @@
+{
+  "name": "blue-mountain-bookkeeping",
+  "version": "1.0.0",
+  "description": "Blue Mountain Bookkeeping website",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.9",
+    "stripe": "^14.21.0"
+  }
+}
