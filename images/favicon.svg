@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#1B2E4B"/>
+  <!-- Sky gradient bands -->
+  <clipPath id="c"><circle cx="16" cy="16" r="16"/></clipPath>
+  <g clip-path="url(#c)">
+    <rect x="0" y="4" width="32" height="4" fill="#7BB8D4" opacity="0.7"/>
+    <rect x="0" y="8" width="32" height="3" fill="#6BAABF" opacity="0.6"/>
+    <rect x="0" y="11" width="32" height="3" fill="#9D8A96" opacity="0.5"/>
+    <rect x="0" y="14" width="32" height="3" fill="#B07A8A" opacity="0.5"/>
+    <!-- Mountain silhouette -->
+    <polygon points="0,32 0,20 8,10 14,16 19,6 25,14 32,8 32,32" fill="#1B2E4B"/>
+    <!-- Snow caps -->
+    <polygon points="19,6 16,12 22,12" fill="white" opacity="0.85"/>
+    <polygon points="8,10 6,14 10,14" fill="white" opacity="0.7"/>
+  </g>
+  <!-- Teal ring -->
+  <circle cx="16" cy="16" r="15" fill="none" stroke="#2ABFBF" stroke-width="1.5" opacity="0.6"/>
+</svg>

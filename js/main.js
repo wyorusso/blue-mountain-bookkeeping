@@ -50,15 +50,15 @@ function showToast(message, duration = 4500) {
 // ---- PASTE YOUR PUBLISHABLE KEY HERE ----
 // Test:  pk_test_xxxxxxxxxxxxx
 // Live:  pk_live_xxxxxxxxxxxxx
-const STRIPE_PUBLISHABLE_KEY = 'pk_test_REPLACE_WITH_YOUR_KEY';
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_51Tlft5Pu0X5gecU9E6uUjbEftoiCi717t5ZecpSDNeuvbYqZhASXyN1XaXcQCC5hUXvDQiG3rlNDtabqRYh7kZdi00Fy454INI';
 
 // ---- PASTE YOUR STRIPE PRICE IDs HERE ----
 // Get these from: Stripe Dashboard > Products > [product] > Pricing
 const STRIPE_PRICE_IDS = {
-  'expense-tracker': 'price_REPLACE_EXPENSE_TRACKER',
-  'cleanup-kit':     'price_REPLACE_CLEANUP_KIT',
-  'tax-prep-kit':    'price_REPLACE_TAX_PREP_KIT',
-  'resource-bundle': 'price_REPLACE_RESOURCE_BUNDLE',
+  'expense-tracker': 'price_1TlgGQPu0X5gecU9zJ6lkdIe',
+  'cleanup-kit':     'price_1TlgGjPu0X5gecU9zd6WLVD7',
+  'tax-prep-kit':    'price_1TlgH9Pu0X5gecU9h6jtphtK',
+  'resource-bundle': 'price_1TlgJLPu0X5gecU92B3ujJJg',
 };
 
 // Button labels for reset after error
