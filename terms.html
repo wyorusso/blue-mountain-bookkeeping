@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service | Blue Mountain Bookkeeping</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="/" class="nav-logo">
+        <img src="images/logo.jpg" alt="Blue Mountain Bookkeeping" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#free-resources">Free Resources</a></li>
+        <li><a href="/#tools">Bookkeeping Tools</a></li>
+        <li><a href="/#about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="section-white legal-page">
+    <div class="container" style="max-width:720px;">
+      <h1>Terms of Service</h1>
+      <p class="legal-date">Last updated: <span id="terms-date"></span></p>
+
+      <p>Please read these Terms of Service carefully before using the Blue Mountain Bookkeeping website or purchasing any of our products. By accessing our website or making a purchase, you agree to be bound by these terms.</p>
+
+      <h2>1. About Our Products</h2>
+      <p>Blue Mountain Bookkeeping offers digital PDF resources and tools designed to help small business owners manage their own finances. Our products are intended for educational and informational purposes only and do not constitute professional accounting, financial, legal, or tax advice.</p>
+      <p>We recommend consulting a licensed accountant or financial professional for advice specific to your business situation.</p>
+
+      <h2>2. Digital Product Purchases</h2>
+      <p>All sales of digital products are final. Because digital products are delivered instantly and cannot be returned, <strong>we do not offer refunds</strong> on purchased PDFs or digital resources. If you experience a technical issue with your download, please contact us and we will make it right.</p>
+      <p>Upon purchase, you receive a personal, non-transferable license to use the product for your own business purposes.</p>
+
+      <h2>3. Intellectual Property</h2>
+      <p>All content on this website — including text, graphics, logos, images, and downloadable resources — is the property of Blue Mountain Bookkeeping and is protected by copyright law.</p>
+      <p>You may not:</p>
+      <ul>
+        <li>Reproduce, redistribute, or resell our products</li>
+        <li>Share purchased products with others</li>
+        <li>Use our content for commercial purposes without written permission</li>
+        <li>Remove copyright or proprietary notices from any materials</li>
+      </ul>
+
+      <h2>4. Free Resources</h2>
+      <p>Free downloadable resources are provided as-is for personal use. The same intellectual property restrictions apply to free resources as to paid products.</p>
+
+      <h2>5. Payment &amp; Security</h2>
+      <p>All payments are processed securely through Stripe. We do not store your payment information. By making a purchase, you agree to Stripe's <a href="https://stripe.com/legal" target="_blank" rel="noopener">Terms of Service</a>.</p>
+
+      <h2>6. Disclaimer of Warranties</h2>
+      <p>Our website and products are provided "as is" without warranties of any kind, either express or implied. We do not warrant that our website will be uninterrupted, error-free, or free of viruses.</p>
+      <p>The bookkeeping information provided in our resources is general in nature. Results will vary based on your individual business circumstances. We make no guarantees about specific financial outcomes from using our products.</p>
+
+      <h2>7. Limitation of Liability</h2>
+      <p>To the fullest extent permitted by law, Blue Mountain Bookkeeping shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of our website or products, including but not limited to financial losses.</p>
+
+      <h2>8. Links to Third-Party Sites</h2>
+      <p>Our website may contain links to third-party websites (such as Facebook, Instagram, or Stripe). We are not responsible for the content or privacy practices of those sites.</p>
+
+      <h2>9. Changes to These Terms</h2>
+      <p>We reserve the right to update these Terms of Service at any time. Updated terms will be posted on this page. Your continued use of our website after changes are posted constitutes acceptance of the new terms.</p>
+
+      <h2>10. Governing Law</h2>
+      <p>These Terms shall be governed by and construed in accordance with the laws of the State of Arkansas, without regard to its conflict of law provisions.</p>
+
+      <h2>11. Contact Us</h2>
+      <p>If you have questions about these Terms of Service, please contact us at:<br>
+        <a href="mailto:hello@bluemountainbookkeeping.com">hello@bluemountainbookkeeping.com</a>
+      </p>
+
+      <p style="margin-top:2.5rem;"><a href="/" style="color:var(--teal-dark);">&larr; Back to Home</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy">&copy; <span id="year"></span> Blue Mountain Bookkeeping. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('terms-date').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  </script>
+</body>
+</html>

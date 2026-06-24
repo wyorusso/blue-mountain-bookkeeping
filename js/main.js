@@ -15,8 +15,6 @@ if (navToggle && navLinks) {
     const isOpen = navLinks.classList.toggle('open');
     navToggle.setAttribute('aria-expanded', isOpen);
   });
-
-  // Close nav when a link is clicked
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       navLinks.classList.remove('open');
@@ -25,10 +23,9 @@ if (navToggle && navLinks) {
   });
 }
 
-// --- Toast notification ---
+// --- Toast ---
 const toast = document.getElementById('toast');
 let toastTimer;
-
 function showToast(message, duration = 4000) {
   if (!toast) return;
   toast.textContent = message;
@@ -37,70 +34,77 @@ function showToast(message, duration = 4000) {
   toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
 }
 
-// --- Opt-in forms ---
-// In production, replace the simulateSubmit function with a real
-// email service integration (e.g. Mailchimp, ConvertKit, etc.)
+// ============================================
+//  STRIPE CHECKOUT
+//  Replace STRIPE_PUBLISHABLE_KEY with your
+//  actual key from stripe.com/dashboard
+//
+//  Each product also needs a Stripe Price ID.
+//  Create products in the Stripe dashboard,
+//  then paste the price_xxx IDs below.
+// ============================================
 
-const RESOURCE_LABELS = {
-  'monthly-checklist': 'Monthly Bookkeeping Checklist',
-  'emergency-plan':    'Bookkeeping Emergency Plan',
-  'software-guide':    'Bookkeeping Software guide',
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_REPLACE_WITH_YOUR_KEY';
+
+// Map product slugs to Stripe Price IDs
+// After creating products in Stripe dashboard, replace these:
+const STRIPE_PRICE_IDS = {
+  'expense-tracker': 'price_REPLACE_EXPENSE_TRACKER',
+  'cleanup-kit':     'price_REPLACE_CLEANUP_KIT',
+  'tax-prep-kit':    'price_REPLACE_TAX_PREP_KIT',
 };
 
-function simulateSubmit(resource, name) {
-  // Replace this with your actual email provider's API call.
-  // Example with Mailchimp or ConvertKit:
-  //   fetch('/api/subscribe', { method: 'POST', body: JSON.stringify({ email, name, resource }) })
-  return new Promise(resolve => setTimeout(resolve, 900));
+let stripeInstance = null;
+
+function getStripe() {
+  if (!stripeInstance && typeof Stripe !== 'undefined') {
+    stripeInstance = Stripe(STRIPE_PUBLISHABLE_KEY);
+  }
+  return stripeInstance;
 }
 
-document.querySelectorAll('.optin-form').forEach(form => {
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const resource = form.dataset.resource;
-    const nameInput  = form.querySelector('input[type="text"]');
-    const emailInput = form.querySelector('input[type="email"]');
-    const btn        = form.querySelector('button[type="submit"]');
+document.querySelectorAll('.stripe-buy-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const product  = btn.dataset.product;
+    const priceId  = STRIPE_PRICE_IDS[product];
+    const name     = btn.dataset.name;
 
-    const name  = nameInput.value.trim();
-    const email = emailInput.value.trim();
+    if (!priceId || priceId.startsWith('price_REPLACE')) {
+      showToast('Checkout coming soon! Check back shortly.');
+      return;
+    }
 
-    if (!name || !email) return;
-
-    // Loading state
     btn.disabled = true;
-    btn.textContent = 'Sending…';
+    btn.textContent = 'Loading…';
 
     try {
-      await simulateSubmit(resource, name);
+      const stripe = getStripe();
+      if (!stripe) throw new Error('Stripe not loaded');
 
-      // Success
-      const label = RESOURCE_LABELS[resource] || 'resource';
-      showToast(`✓ Check your inbox! Your ${label} is on its way.`);
-      form.reset();
-      btn.textContent = '✓ Sent!';
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = getOriginalLabel(resource);
-      }, 3000);
-    } catch {
+      // Option A: Stripe Payment Links (simplest — no backend needed)
+      // Replace the URL below with your Payment Link from the Stripe dashboard:
+      // stripe.com/dashboard > Payment Links > Create
+      // window.location.href = 'https://buy.stripe.com/YOUR_PAYMENT_LINK';
+
+      // Option B: Stripe Checkout (requires a backend /api/checkout endpoint)
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId, productName: name }),
+      });
+      const { sessionId } = await res.json();
+      await stripe.redirectToCheckout({ sessionId });
+
+    } catch (err) {
+      console.error('Stripe error:', err);
       showToast('Something went wrong. Please try again.');
       btn.disabled = false;
-      btn.textContent = getOriginalLabel(resource);
+      btn.textContent = `Buy Now — ${btn.dataset.price === '900' ? '$9' : btn.dataset.price === '1700' ? '$17' : '$19'}`;
     }
   });
 });
 
-function getOriginalLabel(resource) {
-  const labels = {
-    'monthly-checklist': 'Get Checklist',
-    'emergency-plan':    'Get Plan',
-    'software-guide':    'Submit & Download',
-  };
-  return labels[resource] || 'Submit';
-}
-
-// --- Smooth scroll for hash links ---
+// --- Smooth scroll ---
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     const target = document.querySelector(this.getAttribute('href'));

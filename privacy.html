@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy | Blue Mountain Bookkeeping</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="/" class="nav-logo">
+        <img src="images/logo.jpg" alt="Blue Mountain Bookkeeping" class="nav-logo-img" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#free-resources">Free Resources</a></li>
+        <li><a href="/#tools">Bookkeeping Tools</a></li>
+        <li><a href="/#about">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="section-white legal-page">
+    <div class="container" style="max-width:720px;">
+      <h1>Privacy Policy</h1>
+      <p class="legal-date">Last updated: <span id="policy-date"></span></p>
+
+      <p>Blue Mountain Bookkeeping ("we," "us," or "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information when you visit our website and purchase or download our resources.</p>
+
+      <h2>1. Information We Collect</h2>
+      <p>We may collect the following types of information:</p>
+      <ul>
+        <li><strong>Personal information:</strong> Name and email address when you download a free resource or make a purchase.</li>
+        <li><strong>Payment information:</strong> When you purchase a product, payment is processed securely by Stripe. We do not store your credit card number or payment details on our servers.</li>
+        <li><strong>Usage data:</strong> We may collect anonymous data about how visitors use our site (pages visited, time on site) through analytics tools.</li>
+      </ul>
+
+      <h2>2. How We Use Your Information</h2>
+      <p>We use the information we collect to:</p>
+      <ul>
+        <li>Deliver purchased or downloaded resources to you</li>
+        <li>Send you the email content you requested</li>
+        <li>Send occasional emails about new resources, tips, and updates (you may unsubscribe at any time)</li>
+        <li>Process and fulfill your purchases</li>
+        <li>Improve our website and offerings</li>
+        <li>Comply with legal obligations</li>
+      </ul>
+
+      <h2>3. How We Share Your Information</h2>
+      <p>We do not sell your personal information. We may share your information with trusted third-party service providers who help us operate our website and business, including:</p>
+      <ul>
+        <li><strong>Stripe</strong> — for payment processing</li>
+        <li><strong>Email marketing provider</strong> (e.g., ConvertKit or Mailchimp) — for delivering free resources and newsletters</li>
+        <li><strong>Vercel</strong> — for website hosting</li>
+      </ul>
+      <p>These providers are contractually required to keep your information confidential and use it only to provide their services to us.</p>
+
+      <h2>4. Cookies</h2>
+      <p>Our website may use cookies and similar tracking technologies to improve your browsing experience and gather analytics data. You can disable cookies in your browser settings, though some features of the site may not function properly as a result.</p>
+
+      <h2>5. Data Retention</h2>
+      <p>We retain your personal information for as long as necessary to provide our services and comply with legal obligations. You may request deletion of your data at any time by contacting us.</p>
+
+      <h2>6. Your Rights</h2>
+      <p>Depending on your location, you may have the right to:</p>
+      <ul>
+        <li>Access the personal information we hold about you</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Request deletion of your data</li>
+        <li>Opt out of marketing emails at any time via the unsubscribe link in any email</li>
+      </ul>
+
+      <h2>7. Children's Privacy</h2>
+      <p>Our website is not directed at children under 13. We do not knowingly collect personal information from children under 13.</p>
+
+      <h2>8. Security</h2>
+      <p>We implement reasonable security measures to protect your information. Payment data is handled by Stripe, which is PCI-DSS compliant. However, no method of transmission over the internet is 100% secure.</p>
+
+      <h2>9. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. We will post the updated policy on this page with a revised "Last updated" date.</p>
+
+      <h2>10. Contact Us</h2>
+      <p>If you have questions about this Privacy Policy, please contact us at:<br>
+        <a href="mailto:hello@bluemountainbookkeeping.com">hello@bluemountainbookkeeping.com</a>
+      </p>
+
+      <p style="margin-top:2.5rem;"><a href="/" style="color:var(--teal-dark);">&larr; Back to Home</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy">&copy; <span id="year"></span> Blue Mountain Bookkeeping. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('policy-date').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  </script>
+</body>
+</html>

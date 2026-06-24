@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thank You! | Blue Mountain Bookkeeping</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav container">
+      <a href="/" class="nav-logo">
+        <img src="images/logo.jpg" alt="Blue Mountain Bookkeeping" class="nav-logo-img" />
+      </a>
+    </nav>
+  </header>
+
+  <section style="padding: 6rem 0; text-align: center; background: var(--offwhite);">
+    <div class="container" style="max-width: 560px;">
+      <div style="width:64px;height:64px;background:#E1F5F5;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1A7A7A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:2rem;color:#1B2E4B;margin-bottom:0.75rem;">You're all set!</h1>
+      <p id="product-name" style="font-size:1rem;color:#6B8FA8;margin-bottom:1.5rem;">Your purchase was successful.</p>
+      <p style="font-size:0.95rem;color:#2D3F55;line-height:1.75;margin-bottom:2rem;">
+        Check your email for your download link. If you don't see it within a few minutes, check your spam folder or <a href="mailto:hello@bluemountainbookkeeping.com" style="color:#1A7A7A;">contact us</a>.
+      </p>
+      <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy">&copy; <span id="year"></span> Blue Mountain Bookkeeping.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const params = new URLSearchParams(window.location.search);
+    const product = params.get('product');
+    if (product) {
+      document.getElementById('product-name').textContent =
+        `Your "${product}" is on its way to your inbox!`;
+    }
+  </script>
+</body>
+</html>

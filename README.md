@@ -1,86 +1,132 @@
 # Blue Mountain Bookkeeping — Website
 
-A clean, responsive static website for Blue Mountain Bookkeeping — empowering small business owners to manage their own books.
+Responsive static site with free PDF downloads and Stripe-powered paid product checkout.
 
 ## Project Structure
 
 ```
 blue-mountain-bookkeeping/
 ├── index.html          # Main page
-├── css/
-│   └── style.css       # All styles
-├── js/
-│   └── main.js         # Nav, forms, toast notifications
-└── README.md
+├── privacy.html        # Privacy Policy
+├── terms.html          # Terms of Service
+├── success.html        # Post-purchase confirmation
+├── css/style.css       # All styles
+├── js/main.js          # Nav, Stripe checkout, toast
+├── api/checkout.js     # Vercel serverless function (Stripe)
+├── images/logo.jpg     # Brand logo
+├── resources/          # Drop your PDF files here
+│   ├── monthly-bookkeeping-checklist.pdf
+│   ├── bookkeeping-emergency-plan.pdf
+│   └── bookkeeping-software-guide.pdf
+└── vercel.json
 ```
 
-## Features
+---
 
-- **Sticky navigation** with mobile hamburger menu
-- **Hero section** with mountain SVG and brand stripe colors
-- **Free resource opt-in forms** (3 resources, each with name + email capture)
-- **Paid tools section** with links to Stan Store
-- **About section** with brand quote
-- **Toast notifications** on form submission
-- Fully **responsive** (mobile-first)
-- **Accessible** (keyboard nav, ARIA labels, focus rings, reduced motion support)
+## Step 1 — Create GitHub Repo & Branches
 
-## Getting Started Locally
+```bash
+cd blue-mountain-bookkeeping
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
 
-Just open `index.html` in your browser — no build step needed. It's a pure HTML/CSS/JS static site.
+# Create dev branch for testing
+git checkout -b dev
+git push -u origin dev
 
-## Deploying to Vercel
+# Push main (live) branch
+git checkout main
+git push -u origin main
+```
 
-1. Push this repo to GitHub (see below)
-2. Go to [vercel.com](https://vercel.com) → New Project
-3. Import your GitHub repo
-4. Framework Preset: **Other** (static site — no build needed)
-5. Click **Deploy** — done!
+On GitHub: Settings → Branches → set `main` as default (production).
 
-Vercel will auto-deploy on every `git push` to main.
+---
 
-## Connecting a Custom Domain on Vercel
+## Step 2 — Deploy to Vercel
 
-1. In your Vercel project → **Settings → Domains**
-2. Add your domain (e.g. `bluemountainbookkeeping.com`)
-3. Update your DNS records as instructed by Vercel
+1. Go to **vercel.com → Add New Project** → import your GitHub repo
+2. Framework Preset: **Other**
+3. Click **Deploy**
 
-## Connecting Email Opt-in Forms
+### Set up Preview Deployments (dev branch)
+Vercel automatically creates a preview URL for every branch.
+- `main` branch → your live production URL
+- `dev` branch → a unique preview URL (e.g. `blue-mountain-bookkeeping-dev.vercel.app`)
 
-The free resource forms currently simulate submission. To wire them up to a real email provider:
+Every push to `dev` gets its own preview link you can share for review before merging to `main`.
 
-### Option A — ConvertKit / Kit
-Replace `simulateSubmit()` in `js/main.js` with a fetch call to your ConvertKit form endpoint.
+---
 
-### Option B — Mailchimp
-Use Mailchimp's embedded form API or their JavaScript embed.
+## Step 3 — Stripe Setup
 
-### Option C — A serverless function on Vercel
-Create an `api/subscribe.js` file in the project root:
+### 3a. Create a Stripe account
+Go to stripe.com → create account → complete business profile.
 
+### 3b. Create Products in Stripe
+Stripe Dashboard → Products → Add Product for each:
+- Small Business Expense Tracker — $9 one-time
+- Tax Prep Mini Kit — $17 one-time
+- Bookkeeping Cleanup Starter Kit — $19 one-time
+
+Copy the `price_xxx` ID for each product.
+
+### 3c. Add Environment Variables in Vercel
+Vercel Dashboard → Your Project → Settings → Environment Variables:
+
+| Name | Value | Environment |
+|------|-------|-------------|
+| `STRIPE_SECRET_KEY` | `sk_live_xxx` | Production |
+| `STRIPE_SECRET_KEY` | `sk_test_xxx` | Preview (dev branch) |
+
+### 3d. Install Stripe dependency
+```bash
+npm init -y
+npm install stripe
+```
+Commit `package.json` and `package-lock.json`.
+
+### 3e. Update js/main.js
+Replace the placeholder values:
 ```js
-export default async function handler(req, res) {
-  const { email, name, resource } = req.body;
-  // Call your email provider's API here
-  res.status(200).json({ ok: true });
-}
+const STRIPE_PUBLISHABLE_KEY = 'pk_live_YOUR_ACTUAL_KEY';
+const STRIPE_PRICE_IDS = {
+  'expense-tracker': 'price_YOUR_ACTUAL_ID',
+  'cleanup-kit':     'price_YOUR_ACTUAL_ID',
+  'tax-prep-kit':    'price_YOUR_ACTUAL_ID',
+};
 ```
 
-Then update `simulateSubmit` in `main.js` to `fetch('/api/subscribe', { method: 'POST', ... })`.
+---
 
-## Paid Products
+## Step 4 — Add Your PDFs
 
-The "Learn More" buttons on the Bookkeeping Tools section currently link to:
-`https://stan.store/bluemountainbookkeeping`
+Drop your three PDF files into the `/resources` folder with these exact names:
+- `monthly-bookkeeping-checklist.pdf`
+- `bookkeeping-emergency-plan.pdf`
+- `bookkeeping-software-guide.pdf`
 
-Update the `href` on each `.btn` in the tools section to point to individual product pages once you migrate off Stan Store.
+Commit and push — Vercel serves them automatically.
 
-## Updating Content
+---
 
-All content lives in `index.html`. Search for the section you want to edit — sections are clearly commented:
-- `<!-- NAV -->` — navigation links
-- `<!-- HERO -->` — headline and subtext  
-- `<!-- VALUE PROPS -->` — the 4 pillar cards
-- `<!-- FREE RESOURCES -->` — opt-in cards and form text
-- `<!-- PAID TOOLS -->` — product cards, prices, and links
-- `<!-- ABOUT -->` — about section text
+## Step 5 — Connect Your Custom Domain
+
+Vercel Dashboard → Your Project → Settings → Domains → Add domain.
+Update DNS at your registrar as directed by Vercel.
+
+---
+
+## Social Links
+
+- Facebook: https://www.facebook.com/bluemountainbookkeepingnwa
+- Instagram: https://www.instagram.com/bluemountainbookkeeping
+
+---
+
+## Email Address
+
+Update `hello@bluemountainbookkeeping.com` in terms.html and privacy.html
+to your actual contact email before going live.
