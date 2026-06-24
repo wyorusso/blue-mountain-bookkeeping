@@ -1,15 +1,15 @@
 /* ============================================
    BLUE MOUNTAIN BOOKKEEPING — Main JS
    ============================================ */
-
+ 
 // --- Year in footer ---
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
-
+ 
 // --- Mobile nav toggle ---
 const navToggle = document.querySelector('.nav-toggle');
 const navLinks  = document.querySelector('.nav-links');
-
+ 
 if (navToggle && navLinks) {
   navToggle.addEventListener('click', () => {
     const isOpen = navLinks.classList.toggle('open');
@@ -22,7 +22,7 @@ if (navToggle && navLinks) {
     });
   });
 }
-
+ 
 // --- Toast ---
 const toast = document.getElementById('toast');
 let toastTimer;
@@ -33,7 +33,51 @@ function showToast(message, duration = 4500) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
 }
-
+ 
+// ============================================
+//  FREE RESOURCE OPT-IN FORMS
+// ============================================
+ 
+document.querySelectorAll('.free-optin-form').forEach(form => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const resource = form.dataset.resource;
+    const resName  = form.dataset.name;
+    const nameInput  = form.querySelector('input[type="text"]');
+    const emailInput = form.querySelector('input[type="email"]');
+    const btn        = form.querySelector('button[type="submit"]');
+ 
+    const name  = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    if (!name || !email) return;
+ 
+    const originalLabel = btn.textContent;
+    btn.disabled    = true;
+    btn.textContent = 'Sending…';
+ 
+    try {
+      const res = await fetch('/api/subscribe', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, email, resource }),
+      });
+ 
+      if (!res.ok) throw new Error('Server error');
+ 
+      // Replace form with success message
+      form.innerHTML = `
+        <div class="form-success">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1A7A7A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+          Check your inbox! Your <strong>${resName}</strong> is on its way.
+        </div>`;
+    } catch (err) {
+      showToast('Something went wrong. Please try again.');
+      btn.disabled    = false;
+      btn.textContent = originalLabel;
+    }
+  });
+});
+ 
 // ============================================
 //  STRIPE CHECKOUT
 //
@@ -46,7 +90,7 @@ function showToast(message, duration = 4500) {
 //  After creating products in the Stripe dashboard, paste the
 //  price_xxx IDs below for BOTH test and live environments.
 // ============================================
-
+ 
 // ---- PASTE YOUR PUBLISHABLE KEY HERE ----
 // Test:  pk_test_xxxxxxxxxxxxx
 // Live:  pk_live_xxxxxxxxxxxxx
@@ -68,7 +112,7 @@ const BTN_LABELS = {
   'tax-prep-kit':    'Buy Now — $17',
   'resource-bundle': 'Buy the Bundle — $37',
 };
-
+ 
 let stripeInstance = null;
 function getStripe() {
   if (!stripeInstance && typeof Stripe !== 'undefined') {
@@ -76,26 +120,26 @@ function getStripe() {
   }
   return stripeInstance;
 }
-
+ 
 document.querySelectorAll('.stripe-buy-btn').forEach(btn => {
   btn.addEventListener('click', async () => {
     const product     = btn.dataset.product;
     const priceId     = STRIPE_PRICE_IDS[product];
     const productName = btn.dataset.name;
-
+ 
     // Guard: price IDs not yet configured
     if (!priceId || priceId.startsWith('price_REPLACE')) {
       showToast('Checkout coming soon! Check back shortly.');
       return;
     }
-
+ 
     btn.disabled    = true;
     btn.textContent = 'Loading checkout…';
-
+ 
     try {
       const stripe = getStripe();
       if (!stripe) throw new Error('Stripe.js not loaded');
-
+ 
       const res = await fetch('/api/checkout', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -105,15 +149,15 @@ document.querySelectorAll('.stripe-buy-btn').forEach(btn => {
           productSlug: product,   // passed to webhook so it knows which ZIP to send
         }),
       });
-
+ 
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.error || 'Server error');
       }
-
+ 
       const { sessionId } = await res.json();
       await stripe.redirectToCheckout({ sessionId });
-
+ 
     } catch (err) {
       console.error('[Stripe]', err);
       showToast('Something went wrong. Please try again.');
@@ -122,7 +166,7 @@ document.querySelectorAll('.stripe-buy-btn').forEach(btn => {
     }
   });
 });
-
+ 
 // --- Smooth scroll ---
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
@@ -133,3 +177,4 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+ 
