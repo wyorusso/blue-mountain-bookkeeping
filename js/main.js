@@ -64,11 +64,27 @@ document.querySelectorAll('.free-optin-form').forEach(form => {
  
       if (!res.ok) throw new Error('Server error');
  
+      // Trigger instant browser download
+      const fileMap = {
+        'monthly-checklist': 'resources/monthly-bookkeeping-checklist.pdf',
+        'emergency-plan':    'resources/bookkeeping-emergency-plan.pdf',
+        'software-guide':    'resources/bookkeeping-software-guide.pdf',
+      };
+      const filePath = fileMap[resource];
+      if (filePath) {
+        const a = document.createElement('a');
+        a.href = filePath;
+        a.download = '';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+ 
       // Replace form with success message
       form.innerHTML = `
         <div class="form-success">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1A7A7A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
-          Check your inbox! Your <strong>${resName}</strong> is on its way.
+          Downloading now! We also sent a copy to <strong>${email}</strong>.
         </div>`;
     } catch (err) {
       showToast('Something went wrong. Please try again.');
